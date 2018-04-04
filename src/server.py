@@ -92,7 +92,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 def create_server():
-    return HTTPServer(('127.0.0.1', 3020), SimpleHTTPRequestHandler)
+    return HTTPServer(('127.0.0.1', 3000), SimpleHTTPRequestHandler)
 
 
 def run_forever():
