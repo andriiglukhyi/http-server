@@ -72,9 +72,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'Not Found')
 
     def do_POST(self):
+        """post request"""
         parsed_path = urlparse(self.path)
         # parsed_qs = parse_qs(parsed_path.query)
         if parsed_path.path == '/cow':
+            """check if post request hase correct route"""
             try:
                 content_length = int(self.headers['Content-Length'])
                 body = json.loads(self.rfile.read(content_length).decode('utf8'))
