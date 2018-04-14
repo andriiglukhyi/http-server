@@ -96,6 +96,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
             self.wfile.write(b'Not Found')
+            
 
 
 def create_server():
