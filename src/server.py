@@ -7,18 +7,16 @@ from cowpy import cow
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        """redef get function"""
         parsed_path = urlparse(self.path)
         print(parsed_path)
-        # parsed_path = Parsed_Path(path='/cat/books', query='name='Frank Herbert'&genre='SciFi'&....')
         parsed_qs = parse_qs(parsed_path.query)
 
         if parsed_path.path == '/':
-            # Set Headers
+            """get for home rout"""
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
-
-            # Set Body
             self.wfile.write(b'''
                 <!DOCTYPE html>
                 <html>
@@ -44,6 +42,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 ''')
 
         elif parsed_path.path == '/cowsay':
+            """get req for /cowsay """
             cheese = cow.Moose(tongue=True)
             msg = cheese.milk("message about stuff")
 
@@ -52,7 +51,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(msg.encode('utf8'))
 
         elif parsed_path.path == '/cow':
-            # import pdb; pdb.set_trace()
+            """get req for /cow"""
             try:
                 cat = parsed_qs['msg'][0]
             except KeyError:
@@ -73,13 +72,14 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'Not Found')
 
     def do_POST(self):
+        """post request"""
         parsed_path = urlparse(self.path)
         # parsed_qs = parse_qs(parsed_path.query)
         if parsed_path.path == '/cow':
+            """check if post request hase correct route"""
             try:
                 content_length = int(self.headers['Content-Length'])
                 body = json.loads(self.rfile.read(content_length).decode('utf8'))
-                # import pdb; pdb.set_trace()
             except KeyError:
                 self.send_response(400)
                 self.end_headers()
@@ -87,7 +87,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 return
             cheese = cow.Moose(tongue=True)
             msg = cheese.milk(body['msg'])
-
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
@@ -97,6 +96,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
             self.wfile.write(b'Not Found')
+            
 
 
 def create_server():
